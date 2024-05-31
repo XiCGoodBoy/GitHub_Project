@@ -36,3 +36,31 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 };
+
+class FMyAsync : public TSharedFromThis<FMyAsync>
+{
+public:
+	void OnAsyncOperationComplete()
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Emerald,TEXT("Async operation completed."));
+	}
+
+	void StartAsyncOperation()
+	{
+		// 异步操作的模拟
+		Async(EAsyncExecution::ThreadPool, [WeakThis=AsShared()]()
+		{
+			// 模拟耗时操作
+			FPlatformProcess::Sleep(2);
+
+			// 回到主线程
+			Async(EAsyncExecution::TaskGraphMainThread, [WeakThis]()
+			{
+				if (WeakThis.ToSharedPtr().IsValid())
+				{
+					WeakThis->OnAsyncOperationComplete();
+				}
+			});
+		});
+	}
+};

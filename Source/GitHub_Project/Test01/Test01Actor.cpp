@@ -37,17 +37,23 @@ void ATest01Actor::BeginPlay()
 	//
 	// int32 Result = Future.Get();
 	// UE_LOG(LogTemp, Warning, TEXT("the long running task: %d"), Result);
-	
+
 	//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green,FString::Printf(TEXT("%d"),UEnum::LookupEnumName(FName(),TEXT("EABC::c"))));
-	for (TObjectIterator<UEnum> It; It; ++It)
-	{
-		UEnum* Enum = *It;
-		if (Enum)
-		{
-			FString EnumName = Enum->GetName();
-			UE_LOG(LogTemp, Log, TEXT("Enum Name: %s"), *EnumName);
-		}
-	}
+
+	// for (TObjectIterator<UEnum> It; It; ++It)
+	// {
+	// 	UEnum* Enum = *It;
+	// 	if (Enum)
+	// 	{
+	// 		FString EnumName = Enum->GetName();
+	// 		UE_LOG(LogTemp, Log, TEXT("Enum Name: %s"), *EnumName);
+	// 	}
+	// }
+
+	TSharedPtr<FMyAsync> MyAsyncIns = MakeShared<FMyAsync>();
+	MyAsyncIns->StartAsyncOperation();
+	// 保持主线程运行以等待异步操作完成
+	//FPlatformProcess::Sleep(5);
 }
 
 
